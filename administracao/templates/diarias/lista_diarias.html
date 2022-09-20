@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+<!-- prettier-ignore -->
+{% block title %} Listagem de diárias {%endblock title%} 
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="title">Lista de diárias</h3>
+    </div>
+    <br />
+    <div class="btn-toolbar ml-4">
+        <div class="btn-group mr-2">
+            <a href="{% url 'listar_diarias' %}">
+                <button class="btn btn-default" id="P">Todas</button>
+            </a>
+            <a href="{% url 'listar_diarias' %}?status=pendentes">
+                <button class="btn btn-default" id="P">Pendentes</button>
+            </a>
+            <a href="{% url 'listar_diarias' %}?status=nao-avaliadas">
+                <button class="btn btn-default" id="N">Não avaliadas</button>
+            </a>
+            <a href="{% url 'listar_diarias' %}?status=canceladas">
+                <button class="btn btn-default" id="N">Canceladas</button>
+            </a>
+            <a href="{% url 'listar_diarias' %}?status=concluidas">
+                <button class="btn btn-default" id="C">Avaliadas</button>
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Data de atendimento</th>
+                    <th>Status</th>
+                    <th>Tipo de serviço</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for diaria in diarias %}
+                <tr>
+                    <td>{{diaria.id}}</td>
+                    <td>{{diaria.data_atendimento}}</td>
+                    <td>{{diaria.get_status_display}}</td>
+                    <td>{{diaria.servico.nome}}</td>
+                    <td>{{diaria.preco}}</td>
+                    <td>
+                        {% if diaria.status == 6 %}
+                        <a href="{% url 'transferir_pagamento' diaria.id %}"
+                            >Transferir pagamento</a
+                        >
+                        {% else %}
+                        <a href="#">Transferência indisponível</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a href="{% url 'cadastrar_servico' %}" class="btn btn-primary">Cadastrar</a>
+{% endblock content %}
